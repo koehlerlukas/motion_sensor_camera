@@ -2,8 +2,9 @@ import RPi.GPIO as GPIO
 import picamera as PiCamera
 import time
 
-PHOTO_PATH = "/home/pi/motion_sensor_camera/photos/"
-VIDEO_PATH = "/home/pi/motion_sensor_camera/videos/"
+PROJECT_PATH = "/home/pi/motion_sensor_camera/"
+PHOTO_PATH   = PROJECT_PATH + "photos/"
+VIDEO_PATH   = PROJECT_PATH + "videos/"
 
 PIR_PIN_ONE = 23
 PIR_PIN_TWO = 24
@@ -49,13 +50,13 @@ def takePhoto(): # When callback add channel to arguments
     camera.start_preview()
     photo = readAndUpdateNumber()
     time.sleep(2)
-    camera.capture(PHOTO_PATH + "photo" + photo)
+    camera.capture(PHOTO_PATH + "photo_" + photo)
     camera.stop_preview()
 
 def makeVideo(): # When callback add channel to arguments
     camera.start_preview()
     video = readAndUpdateNumber(photo=False)
-    camera.start_recording(VIDEO_PATH + "video" + video)
+    camera.start_recording(VIDEO_PATH + "video_" + video)
     time.sleep(10)
     camera.stop_recording()
     camera.stop_preview()
