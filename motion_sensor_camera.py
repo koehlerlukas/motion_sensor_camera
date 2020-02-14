@@ -1,8 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 
-PIR_ONE_PIN  = 23
-PIR2_TWO_PIN = 24
+PIR_PIN_ONE = 23
+PIR_PIN_TWO = 24
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIR_ONE_PIN,  GPIO.IN)
