@@ -3,10 +3,14 @@ import picamera as PiCamera
 import time
 import argparse
 import datetime
+from pathlib import Path
 
 PROJECT_PATH = "/home/pi/Projekte/motion_sensor_camera/" # Change to your project path
-PHOTO_PATH   = PROJECT_PATH + "photos/" # May need to be created 
-VIDEO_PATH   = PROJECT_PATH + "videos/" # May need to be created
+PHOTO_PATH   = PROJECT_PATH + "photos/"
+VIDEO_PATH   = PROJECT_PATH + "videos/"
+
+Path(PHOTO_PATH).mkdir(parents=True, exist_ok=True)
+Path(VIDEO_PATH).mkdir(parents=True, exist_ok=True)
 
 PIR_PIN_ONE = 23 # Change to the pin you use
 PIR_PIN_TWO = 24 # Change to the pin you use
