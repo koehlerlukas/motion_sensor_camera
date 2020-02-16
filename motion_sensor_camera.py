@@ -3,12 +3,17 @@ import picamera as PiCamera
 import time
 import argparse
 
-PROJECT_PATH = "/home/pi/Projekte/motion_sensor_camera/"
-PHOTO_PATH   = PROJECT_PATH + "photos/"
-VIDEO_PATH   = PROJECT_PATH + "videos/"
+# Format of shots.txt:
+#
+# x -> Number of photos taken
+# y -> Number of videos made
 
-PIR_PIN_ONE = 23
-PIR_PIN_TWO = 24
+PROJECT_PATH = "/home/pi/Projekte/motion_sensor_camera/" # Change to your project path
+PHOTO_PATH   = PROJECT_PATH + "photos/" # May need to be created 
+VIDEO_PATH   = PROJECT_PATH + "videos/" # May need to be created
+
+PIR_PIN_ONE = 23 # Change to the pin you use
+PIR_PIN_TWO = 24 # Change to the pin you use
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--mode", default="photo", type=str, help="Provide the operating mode (photo/video)")
@@ -19,11 +24,6 @@ GPIO.setup(PIR_PIN_TWO, GPIO.IN)
 
 camera = PiCamera.PiCamera()
 #camera.rotation = 180 # Uncomment when the taken photo/video is upside down 
-
-# Format of shots.txt:
-#
-# x -> Number of photos taken
-# y -> Number of videos made
 
 def readNumbers():
     with open("shots.txt", "r") as file:
@@ -50,7 +50,7 @@ def readAndUpdateNumber(photo=True):
     updateNumber(photo)
     return number
 
-def takePhoto(): # When callback add channel to arguments
+def takePhoto():
     camera.start_preview()
     photo = readAndUpdateNumber()
     time.sleep(2)
@@ -58,7 +58,7 @@ def takePhoto(): # When callback add channel to arguments
     camera.stop_preview()
     print("Photo #" + str(photo) + " taken!")
 
-def makeVideo(): # When callback add channel to arguments
+def makeVideo():
     camera.start_preview()
     video = readAndUpdateNumber(photo=False)
     camera.start_recording(VIDEO_PATH + "video" + str(video) + ".h264")
