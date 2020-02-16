@@ -1,23 +1,27 @@
 import RPi.GPIO as GPIO
 import picamera as PiCamera
 import time
+import argparse
 
-PROJECT_PATH = "/home/pi/motion_sensor_camera/"
+PROJECT_PATH = "/home/pi/Projekte/motion_sensor_camera/"
 PHOTO_PATH   = PROJECT_PATH + "photos/"
 VIDEO_PATH   = PROJECT_PATH + "videos/"
 
 PIR_PIN_ONE = 23
 PIR_PIN_TWO = 24
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--mode", default="photo", type=str, help="Provide the operating mode (photo/video)")
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIR_PIN_ONE, GPIO.IN)
 GPIO.setup(PIR_PIN_TWO, GPIO.IN)
 
-camera = PiCamera()
+camera = PiCamera.PiCamera()
 camera.rotation = 180
 
 # Format of shots.txt:
-# 
+#
 # x -> Number of photos taken
 # y -> Number of videos made
 
@@ -26,9 +30,9 @@ def readNumbers():
         return [int(x) for x in file.readlines()]
 
 def readNumber(photo):
-    if photo: 
-        return readNumbers()[0] 
-    else: 
+    if photo:
+        return readNumbers()[0]
+    else:
         return readNumbers()[1]
 
 def updateNumber(photo):
@@ -50,25 +54,36 @@ def takePhoto(): # When callback add channel to arguments
     camera.start_preview()
     photo = readAndUpdateNumber()
     time.sleep(2)
-    camera.capture(PHOTO_PATH + "photo_" + photo)
+    camera.capture(PHOTO_PATH + "photo_" + str(photo) + ".jpg")
     camera.stop_preview()
+    print("Photo #" + str(photo) + " taken!")
 
 def makeVideo(): # When callback add channel to arguments
     camera.start_preview()
     video = readAndUpdateNumber(photo=False)
-    camera.start_recording(VIDEO_PATH + "video_" + video)
+    camera.start_recording(VIDEO_PATH + "video_" + str(video) + ".h264")
     time.sleep(10)
     camera.stop_recording()
     camera.stop_preview()
+    print("Video #" + str(video) + " made!")
 
-def observe():
-    while True:        
+def observe(mode):
+    if not (mode == "video" or mode == "photo"):
+        print(mode + " not recognized. Falling back to photo mode.")
+        mode = "photo"
+
+    print("Operating in " + mode + " mode.")
+    while True:
         if GPIO.input(PIR_PIN_ONE) == GPIO.HIGH and GPIO.input(PIR_PIN_TWO) == GPIO.HIGH:
-            takePhoto()
+            if mode == "video":
+                makeVideo()
+            else:
+                takePhoto()
             time.sleep(5)
 
 def main():
-    observe()
+    args = parser.parse_args()
+    observe(args.mode)
     GPIO.cleanup()
 
 if __name__ == "__main__":
