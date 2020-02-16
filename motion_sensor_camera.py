@@ -25,7 +25,7 @@ def readNumbers():
     with open("shots.txt", "r") as file:
         return [int(x) for x in file.readlines()]
 
-def readNmbr(photo):
+def readNumber(photo):
     if photo: 
         return readNumbers()[0] 
     else: 
@@ -42,7 +42,7 @@ def updateNumber(photo):
             file.write(str(numbers[1] + 1))
 
 def readAndUpdateNumber(photo=True):
-    number = readNmbr(photo)
+    number = readNumber(photo)
     updateNumber(photo)
     return number
 
