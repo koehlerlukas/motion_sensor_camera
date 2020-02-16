@@ -18,7 +18,7 @@ GPIO.setup(PIR_PIN_ONE, GPIO.IN)
 GPIO.setup(PIR_PIN_TWO, GPIO.IN)
 
 camera = PiCamera.PiCamera()
-camera.rotation = 180
+#camera.rotation = 180 # Uncomment when the taken photo/video is upside down 
 
 # Format of shots.txt:
 #
@@ -54,14 +54,14 @@ def takePhoto(): # When callback add channel to arguments
     camera.start_preview()
     photo = readAndUpdateNumber()
     time.sleep(2)
-    camera.capture(PHOTO_PATH + "photo_" + str(photo) + ".jpg")
+    camera.capture(PHOTO_PATH + "photo" + str(photo) + ".jpg")
     camera.stop_preview()
     print("Photo #" + str(photo) + " taken!")
 
 def makeVideo(): # When callback add channel to arguments
     camera.start_preview()
     video = readAndUpdateNumber(photo=False)
-    camera.start_recording(VIDEO_PATH + "video_" + str(video) + ".h264")
+    camera.start_recording(VIDEO_PATH + "video" + str(video) + ".h264")
     time.sleep(10)
     camera.stop_recording()
     camera.stop_preview()
@@ -83,8 +83,12 @@ def observe(mode):
 
 def main():
     args = parser.parse_args()
-    observe(args.mode)
-    GPIO.cleanup()
+    
+    try:
+        observe(args.mode)
+    except KeyboardInterrupt:
+        GPIO.cleanup()
+        print("Existed.")
 
 if __name__ == "__main__":
     main()
