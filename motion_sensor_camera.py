@@ -62,11 +62,8 @@ def makeVideo(): # When callback add channel to arguments
     camera.stop_preview()
 
 def observe():
-    while True:
-        first_pir  = GPIO.input(PIR_PIN_ONE)
-        second_pir = GPIO.input(PIR_PIN_TWO)
-        
-        if first_pir and second_pir:
+    while True:        
+        if GPIO.input(PIR_PIN_ONE) == GPIO.HIGH and GPIO.input(PIR_PIN_TWO) == GPIO.HIGH:
             takePhoto()
             time.sleep(5)
 
