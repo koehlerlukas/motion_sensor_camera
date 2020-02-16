@@ -4,11 +4,6 @@ import time
 import argparse
 import datetime
 
-# Format of shots.txt:
-#
-# x -> Number of photos taken
-# y -> Number of videos made
-
 PROJECT_PATH = "/home/pi/Projekte/motion_sensor_camera/" # Change to your project path
 PHOTO_PATH   = PROJECT_PATH + "photos/" # May need to be created 
 VIDEO_PATH   = PROJECT_PATH + "videos/" # May need to be created
@@ -26,35 +21,8 @@ GPIO.setup(PIR_PIN_TWO, GPIO.IN)
 camera = PiCamera.PiCamera()
 #camera.rotation = 180 # Uncomment when the taken photo/video is upside down 
 
-<<<<<<< HEAD
 def getCurrentDateTime():
     return datetime.datetime.now().strftime("%d.%m.%y-%X")
-=======
-def readNumbers():
-    with open("shots.txt", "r") as file:
-        return [int(x) for x in file.readlines()]
-
-def readNumber(photo):
-    if photo:
-        return readNumbers()[0]
-    else:
-        return readNumbers()[1]
-
-def updateNumber(photo):
-    numbers = readNumbers()
-    with open("shots.txt", "w+") as file:
-        if photo:
-            file.write(str(numbers[0] + 1) + "\n")
-            file.write(str(numbers[1]))
-        else:
-            file.write(str(numbers[0]) + "\n")
-            file.write(str(numbers[1] + 1))
-
-def readAndUpdateNumber(photo=True):
-    number = readNumber(photo)
-    updateNumber(photo)
-    return number
->>>>>>> 232cabf4f1dcd7e5d1a5957747d07813f64e9bce
 
 def takePhoto():
     camera.start_preview()
@@ -92,7 +60,7 @@ def main():
         observe(args.mode)
     except KeyboardInterrupt:
         GPIO.cleanup()
-        print("Existed.")
+        print("Exited.")
 
 if __name__ == "__main__":
     main()
